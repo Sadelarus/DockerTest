@@ -4,15 +4,20 @@ services:
   mysql_test:
     hostname: mysql_test
     build:
-      context: ./
+      context: ${PWD}
       dockerfile: Dockerfile.mysql
+    environment:
+      - USER=${USER}
+      - HOME=${HOME}
     image: mysql_test_img
     privileged: true
     volumes:
       - /etc/passwd:/etc/passwd
       - /etc/shadow:/etc/shadow
       - /etc/group:/etc/group
-      - ./root-mysql/var/lib/mysql:/var/lib/mysql:rw
+      - ${PWD}/root-mysql/etc/mysql:/etc/mysql:rw
+      - ${PWD}/root-mysql/var/lib/mysql:/var/lib/mysql:rw
+      - ${PWD}/root-mysql/var/run/mysqld:/var/run/mysqld:rw
     ports:
       - target: 3306
         published: 33060
