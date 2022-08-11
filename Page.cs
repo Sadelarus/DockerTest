@@ -1,3 +1,4 @@
+
 using System;
 using System.Data;
 using MySql.Data.MySqlClient;
@@ -10,9 +11,16 @@ public class Test
       dbcmd.CommandText = sql;
       IDataReader reader = dbcmd.ExecuteReader();
       while(reader.Read()) {
-         string FirstName = (string) reader["firstname"];
-         string LastName = (string) reader["lastname"];
-         Console.WriteLine("Primary key: " + FirstName + "; lastname: " + LastName);
+         string firstName = (string) reader["firstname"];
+         string lastName = (string) reader["lastname"];
+         string age_int = reader["age_int"].ToString();
+         string your_number_float = reader["your_number_float"].ToString();
+         string your_number_bigint = reader["your_number_bigint"].ToString();
+         Console.WriteLine("Primary key: " + firstName +
+                           "; lastname: " + lastName +
+                           "; age_int: " + age_int +
+                           "; your number float: " + your_number_float +
+                           "; your number bigint: " + your_number_bigint);
       }
       reader.Close();
       reader = null;
@@ -23,11 +31,22 @@ public class Test
       string firstname = Console.ReadLine();
       Console.WriteLine("Enter Lastname: ");
       string lastname = Console.ReadLine();
+      Console.WriteLine("Enter Age: ");
+      int age_int = Int32.Parse(Console.ReadLine());
+      Console.WriteLine("Enter your_number_float: ");
+      float your_number_float = (float)Convert.ToDouble(Console.ReadLine());
+      Console.WriteLine("Enter your_number_bigint: ");
+      long your_number_bigint = (long)Convert.ToDouble(Console.ReadLine());
+
       IDbCommand dbcmd = dbcon.CreateCommand();
-      string sql = "INSERT INTO employee (firstname , lastname) VALUES ('" + firstname + "', '" + lastname + "')";
+      string sql = "INSERT INTO employee (firstname , lastname, age_int, your_number_float, your_number_bigint) VALUES ('" + firstname + "', '"
+                                                                                                                       + lastname + "', '"
+                                                                                                                       + age_int + "', '"
+                                                                                                                       + your_number_float + "', '"
+                                                                                                                       + your_number_bigint + "')";
       dbcmd.CommandText = sql;
       dbcmd.ExecuteNonQuery();
-      Console.WriteLine("Try to write in Table [" + firstname + "] and [" + lastname + "]\n");
+      Console.WriteLine("Try to write in Table [" + firstname + "], [" + lastname + "], [" + age_int + "], [" + your_number_float + "], [" + your_number_bigint + "]\n");
       dbcmd.Dispose();
       dbcmd = null;
    }
@@ -59,14 +78,16 @@ public class Test
       // with columns firstname and lastname
       // such as,
       //        CREATE TABLE employee (
-      //           firstname varchar(32),
-      //           lastname varchar(32));
+      //           firstname char(32),
+      //           lastname char(32));
+      //           age_int int;
+      //           your_number int;
       string sql = "select * from employee";
       dbcmd.CommandText = sql;
       Console.WriteLine("\nWelcome to MariaDB interface");
       while(true)
       {
-         Console.WriteLine("\n1) Show Table\n 2) Insert Data\n 3) Delte data\n 0) Leave\n Enter mode: ");
+         Console.WriteLine("\n1) Show Table\n2) Insert Data\n3) Delte data\n0) Leave\nEnter mode: ");
          i = Int32.Parse(Console.ReadLine());
          if(i == 1){
             showTb(dbcon);
